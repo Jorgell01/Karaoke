@@ -2,6 +2,7 @@ package aed.controllers;
 
 import aed.app.KaraokeApp;
 import aed.dao.CancionDAO;
+import aed.dao.UserDAO;
 import aed.model.Cancion;
 import aed.model.User;
 import javafx.collections.FXCollections;
@@ -17,7 +18,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import java.util.Date;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class RootController {
 
@@ -32,6 +35,8 @@ public class RootController {
     @FXML
     private TableColumn<Cancion, Integer> countColumn;
     @FXML
+    private TableColumn<Cancion, Date> lastPlayedColumn;
+    @FXML
     private Label usernameLabel;
 
     private ObservableList<Cancion> songData = FXCollections.observableArrayList();
@@ -43,6 +48,7 @@ public class RootController {
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         artistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
         countColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
+        lastPlayedColumn.setCellValueFactory(new PropertyValueFactory<>("lastPlayed"));
 
         loadSongData();
     }
@@ -59,7 +65,9 @@ public class RootController {
 
     private void loadSongData() {
         CancionDAO cancionDAO = new CancionDAO();
-        songData.setAll(cancionDAO.getAllSongs());
+        songData.setAll(cancionDAO.getAllSongsByUser(currentUser).stream()
+                .sorted((s1, s2) -> Integer.compare(s2.getCount(), s1.getCount()))
+                .collect(Collectors.toList()));
         songTable.setItems(songData);
     }
 
@@ -77,15 +85,31 @@ public class RootController {
         Optional<String> artist = dialog.showAndWait();
         if (!artist.isPresent()) return;
 
+        dialog.setContentText("Username:");
+        Optional<String> username = dialog.showAndWait();
+        if (!username.isPresent()) return;
+
+        UserDAO userDAO = new UserDAO();
+        User user = userDAO.getUserByUsername(username.get());
+        if (user == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("User not found");
+            alert.setContentText("The specified user does not exist.");
+            alert.showAndWait();
+            return;
+        }
+
         Cancion newSong = new Cancion();
         newSong.setTitle(title.get());
         newSong.setArtist(artist.get());
         newSong.setCount(0);
+        newSong.setUser(user);
 
         CancionDAO cancionDAO = new CancionDAO();
         cancionDAO.saveSong(newSong);
 
-        songData.add(newSong);
+        loadSongData();
     }
 
     @FXML
@@ -114,8 +138,19 @@ public class RootController {
     }
 
     @FXML
-    private void handleRefresh() {
-        loadSongData();
+    private void handlePlaySong() {
+        Cancion selectedSong = songTable.getSelectionModel().getSelectedItem();
+        if (selectedSong != null) {
+            CancionDAO cancionDAO = new CancionDAO();
+            cancionDAO.playSong(selectedSong);
+            loadSongData();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No Selection");
+            alert.setHeaderText("No Song Selected");
+            alert.setContentText("Please select a song in the table.");
+            alert.showAndWait();
+        }
     }
 
     @FXML

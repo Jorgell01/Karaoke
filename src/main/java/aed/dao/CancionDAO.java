@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import aed.util.DatabaseManager;
 
+import java.util.Date;
 import java.util.List;
 
 public class CancionDAO {
@@ -23,17 +24,27 @@ public class CancionDAO {
         }
     }
 
-    public List<Cancion> getAllSongs() {
-        try (Session session = DatabaseManager.getSessionFactory().openSession()) {
-            return session.createQuery("from Cancion", Cancion.class).list();
-        }
-    }
-
-    public List<Cancion> getSongsByUser(User user) {
+    public List<Cancion> getAllSongsByUser(User user) {
         try (Session session = DatabaseManager.getSessionFactory().openSession()) {
             return session.createQuery("from Cancion where user = :user", Cancion.class)
                     .setParameter("user", user)
                     .list();
+        }
+    }
+
+    public void playSong(Cancion song) {
+        Transaction transaction = null;
+        try (Session session = DatabaseManager.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            song.setCount(song.getCount() + 1);
+            song.setLastPlayed(new Date());
+            session.update(song);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
         }
     }
 
