@@ -3,6 +3,9 @@ package aed.app;
 import aed.controllers.LoginController;
 import aed.controllers.RootController;
 import aed.model.User;
+import atlantafx.base.theme.Dracula;
+import atlantafx.base.theme.NordDark;
+import atlantafx.base.theme.NordLight;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,6 +16,8 @@ public class KaraokeApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        Application.setUserAgentStylesheet(new NordLight().getUserAgentStylesheet());
+
         User loggedInUser = showLoginDialog(primaryStage);
         if (loggedInUser == null) {
             System.exit(0);
