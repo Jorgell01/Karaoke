@@ -9,7 +9,7 @@ Este proyecto es una aplicación de Karaoke desarrollada utilizando JavaFX para 
 - **Autenticación de Usuarios**: Los usuarios pueden registrarse e iniciar sesión en la aplicación.
 - **Gestión de Canciones**: Los usuarios pueden agregar, eliminar y reproducir canciones.
 - **Seguimiento de Reproducciones**: La aplicación lleva un registro del número de veces que se ha reproducido cada canción.
-- **Tematización**: La aplicación utiliza el tema Dracula para una interfaz moderna y visualmente atractiva.
+- **Tematización**: La aplicación utiliza el tema light para una interfaz moderna y visualmente atractiva.
 
 ## Estructura del Proyecto
 
