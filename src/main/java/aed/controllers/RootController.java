@@ -5,6 +5,7 @@ import aed.dao.CancionDAO;
 import aed.dao.UserDAO;
 import aed.model.Cancion;
 import aed.model.User;
+import aed.util.DialogUtil;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -92,11 +93,7 @@ public class RootController {
         UserDAO userDAO = new UserDAO();
         User user = userDAO.getUserByUsername(username.get());
         if (user == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("User not found");
-            alert.setContentText("The specified user does not exist.");
-            alert.showAndWait();
+            DialogUtil.showErrorDialog("Error", "User not found", "The specified user does not exist.");
             return;
         }
 
@@ -116,24 +113,15 @@ public class RootController {
     private void handleDeleteSong() {
         Cancion selectedSong = songTable.getSelectionModel().getSelectedItem();
         if (selectedSong != null) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Delete Song");
-            alert.setHeaderText("Are you sure you want to delete this song?");
-            alert.setContentText("Title: " + selectedSong.getTitle() + "\nArtist: " + selectedSong.getArtist());
-
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
+            boolean confirmed = DialogUtil.showConfirmationDialog("Delete Song", "Are you sure you want to delete this song?", "Title: " + selectedSong.getTitle() + "\nArtist: " + selectedSong.getArtist());
+            if (confirmed) {
                 CancionDAO cancionDAO = new CancionDAO();
                 cancionDAO.deleteSong(selectedSong);
 
                 songData.remove(selectedSong);
             }
         } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("No Selection");
-            alert.setHeaderText("No Song Selected");
-            alert.setContentText("Please select a song in the table.");
-            alert.showAndWait();
+            DialogUtil.showWarningDialog("No Selection", "No Song Selected", "Please select a song in the table.");
         }
     }
 
@@ -145,11 +133,7 @@ public class RootController {
             cancionDAO.playSong(selectedSong);
             loadSongData();
         } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("No Selection");
-            alert.setHeaderText("No Song Selected");
-            alert.setContentText("Please select a song in the table.");
-            alert.showAndWait();
+            DialogUtil.showWarningDialog("No Selection", "No Song Selected", "Please select a song in the table.");
         }
     }
 

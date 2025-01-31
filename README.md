@@ -70,6 +70,7 @@ Hacemos uso de la libreria de [mkpaz](https://github.com/mkpaz/atlantafx) para l
 - **`UserDAO.java`**: La clase DAO para gestionar los datos de los usuarios.
 - **`DatabaseInitializer.java`**: Una clase utilitaria para inicializar la base de datos.
 - **`DatabaseManager`**: Una clase utilitaria para gestionar la conexión a la base de datos.
+- **`DialogUtil.java`**: Una clase utilitaria para mostrar diálogos de alerta.
 - **`init.sql`**: El script SQL para inicializar la base de datos.
 
 ## Uso

@@ -2,6 +2,7 @@ package aed.controllers;
 
 import aed.dao.UserDAO;
 import aed.model.User;
+import aed.util.DialogUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
@@ -44,11 +45,7 @@ public class LoginController {
             loggedInUser = user;
             dialogStage.close();
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Login Error");
-            alert.setHeaderText("Invalid Credentials");
-            alert.setContentText("Please enter a valid username and password.");
-            alert.showAndWait();
+            DialogUtil.showErrorDialog("Login Error", "Invalid Credentials", "Please enter a valid username and password.");
         }
     }
 
@@ -58,11 +55,7 @@ public class LoginController {
         String password = passwordField.getText();
 
         if (username.isEmpty() || password.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Registration Error");
-            alert.setHeaderText("Incomplete Fields");
-            alert.setContentText("Please enter both username and password.");
-            alert.showAndWait();
+            DialogUtil.showWarningDialog("Registration Error", "Incomplete Fields", "Please enter both username and password.");
             return;
         }
 
@@ -70,22 +63,14 @@ public class LoginController {
         User existingUser = userDAO.getUserByUsername(username);
 
         if (existingUser != null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Registration Error");
-            alert.setHeaderText("User Already Exists");
-            alert.setContentText("Please choose a different username.");
-            alert.showAndWait();
+            DialogUtil.showWarningDialog("Registration Error", "User Already Exists", "Please choose a different username.");
         } else {
             User newUser = new User();
             newUser.setUsername(username);
             newUser.setPassword(password);
             userDAO.saveUser(newUser);
 
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Registration Successful");
-            alert.setHeaderText("User Registered");
-            alert.setContentText("You can now log in with your new credentials.");
-            alert.showAndWait();
+            DialogUtil.showInformationDialog("Registration Successful", "User Registered", "You can now log in with your new credentials.");
         }
     }
 }
