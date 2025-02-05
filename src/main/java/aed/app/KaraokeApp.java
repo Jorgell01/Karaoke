@@ -9,8 +9,11 @@ import atlantafx.base.theme.NordLight;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.util.Objects;
 
 public class KaraokeApp extends Application {
 
@@ -31,6 +34,9 @@ public class KaraokeApp extends Application {
         controller.setPrimaryStage(primaryStage);
         controller.setCurrentUser(loggedInUser);
 
+        Image icon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/app-icon.png")));
+
+        primaryStage.getIcons().add(icon);
         Scene scene = new Scene(loader.getRoot());
         primaryStage.setScene(scene);
         primaryStage.setTitle("Karaoke");
@@ -41,6 +47,10 @@ public class KaraokeApp extends Application {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(KaraokeApp.class.getResource("/fxml/LoginView.fxml"));
         Stage dialogStage = new Stage();
+
+        Image dialogIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/app-icon.png")));
+
+        dialogStage.getIcons().add(dialogIcon);
         dialogStage.setTitle("Login");
         dialogStage.initModality(Modality.WINDOW_MODAL);
         dialogStage.setResizable(false);

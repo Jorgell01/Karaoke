@@ -21,7 +21,7 @@
         <columns>
             <TableColumn fx:id="titleColumn" prefWidth="200" text="Title" />
             <TableColumn fx:id="artistColumn" prefWidth="200" text="Artist" />
-            <TableColumn fx:id="countColumn" prefWidth="200" text="Times Sung" />
+            <TableColumn fx:id="countColumn" prefWidth="200" text="Times Played" />
             <TableColumn fx:id="lastPlayedColumn" prefWidth="200" text="Last Played" />
         </columns>
         <columnResizePolicy>
